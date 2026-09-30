@@ -1,6 +1,10 @@
-.DS_Store
+.git/
+.openai/
 .sites-runtime/
 node_modules/
 .env
 .env.*
+.DS_Store
 .last-good-revision
+test/
+README.md

@@ -1,0 +1,7 @@
+*
+!Dockerfile
+!server.mjs
+!dist/
+!dist/**
+dist/**/.*
+dist/.openai/

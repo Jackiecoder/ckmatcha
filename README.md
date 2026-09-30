@@ -27,6 +27,12 @@ Guitea S, A, B and BK remain separate collections. Guizhou Ruisai Song, Ming / Q
 
 The form prepares an encoded `mailto:` draft to `c.kcommercegroup@gmail.com`. The visitor reviews and sends it in their email application. There is no backend submission, automatic email delivery or form-data storage. Only the language preference is saved locally.
 
-## Hosting
+## GCP hosting
 
-This Site is registered in `.openai/hosting.json`. Preserve its project ID when editing or deploying. Static hosting serves `dist/`; production source and publication use the Sites workflow.
+Run `bash deploy.sh` to deploy the independent Cloud Run service `ck-matcha` in project `iportfolio-497808`, region `us-central1`, following iPortfolio's source-build and release verification pattern. `PROJECT_ID`, `REGION` and `SERVICE` may be overridden explicitly. This deployment does not require a database or scheduled refresh.
+
+The container uses Cloud Run's `PORT` and listens on `0.0.0.0`. The service is publicly accessible over HTTPS, uses request-based CPU allocation and zero minimum instances, and is capped at two instances with 256 MiB memory each. `/api/healthz` is the health endpoint, matching the iPortfolio convention. PDF downloads stream instead of buffering complete catalogs in server memory.
+
+The script runs HTTP behavior tests and JavaScript syntax checks, validates the tagged revision's health and frontend SHA-256 hashes, then routes 100% of traffic to the new revision and removes the temporary tag. On updates, it retains the prior revision in the ignored `.last-good-revision` file for rollback. First deployments have no prior serving revision.
+
+The earlier Sites registration remains in `.openai/hosting.json`; its identity is preserved separately. `.gcloudignore` and `.dockerignore` keep hosting metadata, credentials and local tooling out of the GCP container.
